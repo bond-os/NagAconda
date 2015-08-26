@@ -168,7 +168,11 @@ class Plugin:
         # bottom, top, and match inversion, so long as the array element
         # is defined Perform our range test and set the exit status.
         self.__verbose_print(range_list[threshold-1])
-        (bottom, top, invert, raw) = range_list[threshold-1]
+        try:
+            (bottom, top, invert, raw) = range_list[threshold-1]
+        except:
+            (bottom, top, invert) = range_list[threshold-1]
+            raw = val
 
         self.__perf[name]["raw_%s" % range_type] = raw
 
@@ -291,7 +295,8 @@ class Plugin:
                 perf_name, perf_dict['val'], perf_dict['scale'] or '',
                 perf_dict.get('raw_warning', ''),
                 perf_dict.get('raw_critical', ''),
-                perf_dict['min'] or '', perf_dict['max'] or '')
+                '' if perf_dict['min'] is None else perf_dict['min'],
+                '' if perf_dict['max'] is None else perf_dict['max'])
             )
 
         perf_string = ''
